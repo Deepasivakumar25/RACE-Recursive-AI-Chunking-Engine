@@ -1,9 +1,15 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500,
+    chunk_overlap=100,
+    separators=[
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+    ]
+)
 
-def split_text(rec_pdf: str, chunk_size: int = 500, chunk_overlap: int = 100) -> list[str]:
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
-    )
-    return text_splitter.split_text(rec_pdf)
+chunk_list = text_splitter.split_text(rec_pdf)
