@@ -1,15 +1,22 @@
 from pathlib import Path
-import sys
+import importlib.util
 
 SRC_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(SRC_DIR))
 
-from 02_pdf_extraction import extract_pdf_text
-from 03_recursive_text_splitter import split_text
+
+def load_module(filename: str, module_name: str):
+    spec = importlib.util.spec_from_file_location(module_name, SRC_DIR / filename)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+pdf_extraction = load_module("02_pdf_extraction.py", "pdf_extraction")
+recursive_splitter = load_module("03_recursive_text_splitter.py", "recursive_text_splitter")
 
 
 def run(pdf_path: str):
-    rec_pdf = extract_pdf_text(pdf_path)
-    chunk_list = split_text(rec_pdf)
+    rec_pdf = pdf_extraction.extract_pdf_text(pdf_path)
+    chunk_list = recursive_splitter.split_text(rec_pdf)
     print(chunk_list)
     return chunk_list
